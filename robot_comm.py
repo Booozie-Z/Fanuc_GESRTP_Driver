@@ -5,11 +5,8 @@ import time
 
 import srtp_message
 
-port = 18245
-ip = "127.0.0.1"
 
-
-def open_socket():
+def open_socket(ip, port):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.connect((ip, port))
     s.send(srtp_message.INIT_MSG)
@@ -50,8 +47,11 @@ def decode(msg):
 
 
 if __name__ == '__main__':
-    sock = open_socket()
-    for itr in range(100):
+    port = 18245
+    ip = "127.0.0.1"
+    sock = open_socket(ip, port)
+
+    for itr in range(10):
         print("GO11:", read_go(11, sock))
         print("GO13:", read_go(13, sock))
         print("GO15:", read_go(15, sock))
