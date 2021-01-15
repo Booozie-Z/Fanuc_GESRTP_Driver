@@ -18,10 +18,10 @@ sock.close()
 ## Reading Strings:
 Inside your SNPX_ASG System Variable on the robot, configure the memory address
 
-    - SETVAR $SNPX_ASG[X].$ADDRESS 2001
-    - SETVAR $SNPX_ASG[X].$SIZE 3960    
-    - SETVAR $SNPX_ASG[X].$VAR_NAME "SR[1]"    
-    - *R2001-R2040: String register 1*
+- SETVAR $SNPX_ASG[X].$ADDRESS 2001
+- SETVAR $SNPX_ASG[X].$SIZE 3960    
+- SETVAR $SNPX_ASG[X].$VAR_NAME "SR[1]"    
+- *R2001-R2040: String register 1*
     
 ```
 write_mem(2001, "R", "Hello World.", sock)
