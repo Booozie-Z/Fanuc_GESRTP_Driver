@@ -38,7 +38,7 @@ print("Wrote \"%s\" to SR1" % decode_string(read_mem(11001, "R", sock, 40)))
 
 
 
-## Credits
+## References
 [Research Paper on GE SRTP Protocol](https://www.sciencedirect.com/science/article/pii/S1742287617301925?via%3Dihub)
 
 [C# Library](https://github.com/kkuba91/uGESRTP)
