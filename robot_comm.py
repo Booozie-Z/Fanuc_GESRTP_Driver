@@ -106,8 +106,6 @@ if __name__ == '__main__':
     ip = "127.0.0.1"
     sock = open_socket(ip, port)
 
-    # print("", srtp_message.DEBUG_HEADER)
-
     for a in range(1, 17):
         print("DI", a, "-", decode_bit(read_mem(a, "Q", sock), a), end=", ")
     print("\n")
@@ -120,24 +118,15 @@ if __name__ == '__main__':
 
     print("R1   :", decode_register(read_mem(1, "R", sock)))
 
-    # TODO Add String Registers
-    # SETVAR $SNPX_ASG[2].$ADDRESS 2001
-    # SETVAR $SNPX_ASG[2].$SIZE 3960
-    # SETVAR $SNPX_ASG[2].$VAR_NAME "SR[1]"
-    # R11001-R11040: String register 1
     print("SR1  :", decode_string(read_mem(11001, "R", sock, 40)))
 
     write_mem(11001, "R", "Hello World.", sock)
     print("Wrote \"Hello World.\" to SR1")
 
-    # Write range is from -32768 to 32767
-    # Even though 65535 is the highest number you can read.
-    # Probably wont read floats if SNPX_ASG[X].$MULTIPLY is 0
-    # Tested with $MULTIPLY set to 1 (Signed 16 bit)
     write_mem(1, "R", 32767, sock)
-    print("Wrote \"32767\" to R1")
+    print("Wrote \"%d\" to R1" % decode_register(read_mem(1, "R", sock)))
 
     write_mem(20, "AI", 2222, sock)
-    print("Wrote \"2222\" to GO20")
+    print("Wrote \"%d\" to GO20" % decode_register(read_mem(20, "AI", sock)))
 
     sock.close()
