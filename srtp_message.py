@@ -9,14 +9,14 @@ INIT_MSG = bytearray(56)
 BASE_MSG = [
     b'\x02',  # 00 - Type (03 is Return, 02 is Transmit)
     b'\x00',  # 01 - Reserved/Unknown
-    b'\x06',  # 02 - Seq Number - FILL AT RUNTIME
+    b'\x06',  # 02 - Seq Number # Kepware increments every packet, recieves mirror what is sent
     b'\x00',  # 03 - Reserved/Unknown
-    b'\x00',  # 04 - Text Length - FILL AT RUNTIME ???
+    b'\x00',  # 04 - Text Length
     b'\x00',  # 05 - Reserved/Unknown
     b'\x00',  # 06 - Reserved/Unknown
     b'\x00',  # 07 - Reserved/Unknown
     b'\x00',  # 08 - Reserved/Unknown
-    b'\x01',  # 09 - Reserved/Unknown*
+    b'\x01',  # 09 - Unknown / Reading x01 | Writing x02
     b'\x00',  # 10 - Reserved/Unknown
     b'\x00',  # 11 - Reserved/Unknown
     b'\x00',  # 12 - Reserved/Unknown
@@ -24,7 +24,7 @@ BASE_MSG = [
     b'\x00',  # 14 - Reserved/Unknown
     b'\x00',  # 15 - Reserved/Unknown
     b'\x00',  # 16 - Reserved/Unknown
-    b'\x01',  # 17 - Unknown / Always x01
+    b'\x01',  # 17 - Unknown / Reading x01 | Writing x02
     b'\x00',  # 18 - Reserved/Unknown
     b'\x00',  # 19 - Reserved/Unknown
     b'\x00',  # 20 - Reserved/Unknown
@@ -37,8 +37,8 @@ BASE_MSG = [
     b'\x00',  # 27 - Time Minutes - FILL AT RUNTIME
     b'\x00',  # 28 - Time Hours   - FILL AT RUNTIME
     b'\x00',  # 29 - Reserved/Unknown
-    b'\x06',  # 30 - Seq Number (Repeated) - FILL AT RUNTIME ???? 0x06 always?
-    b'\xc0',  # 31 - Message Type
+    b'\x06',  # 30 - Seq Number (Repeated) - 0x06 for Reading, 0x09 for Writing
+    b'\xc0',  # 31 - Message Type - Kepware shows \x80 for writing
     b'\x00',  # 32 - Mailbox Source
     b'\x00',  # 33 - Mailbox Source
     b'\x00',  # 34 - Mailbox Source
@@ -59,9 +59,9 @@ BASE_MSG = [
     b'\x00',  # 49 - Request Dependent Space (Ex. Write Value:MSB)
     b'\x00',  # 50 - Request Dependent Space (Ex. Write Value Part 2 for LONG:LSB)
     b'\x00',  # 51 - Request Dependent Space (Ex. Write Value Part 2 for LONG:MSB)
-    b'\x00',  # 52 - Reserved/Unknown
-    b'\x00',  # 53 - Reserved/Unknown
-    b'\x00',  # 54 - Reserved/Unknown
+    b'\x00',  # 52 - Reserved/Unknown   # Kepware Shows For Writing: LSB Address - 1
+    b'\x00',  # 53 - Reserved/Unknown   # Kepware Shows For Writing: MSB Address - 1
+    b'\x00',  # 54 - Reserved/Unknown   # Writing Length of Value / 2
     b'\x00'  # 55 - Reserved/Unknown
 ]
 
