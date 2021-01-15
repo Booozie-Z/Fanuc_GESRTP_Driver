@@ -1,12 +1,11 @@
 import socket
 import struct
-
 import srtp_message
 
 
-def open_socket(ip, port):
+def open_socket(robot_ip, snpx_port):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.connect((ip, port))
+    s.connect((robot_ip, snpx_port))
     s.send(srtp_message.INIT_MSG)
     init_resp = s.recv(1024)
     if init_resp[0] != 1:
@@ -75,7 +74,7 @@ def write_mem(addr, reg, var, s):
 
     out_bytes = b''.join(msg)
     s.send(out_bytes)
-    print(decode_packet(out_bytes))
+
     return s.recv(1024)
 
 
@@ -109,26 +108,36 @@ if __name__ == '__main__':
 
     # print("", srtp_message.DEBUG_HEADER)
 
-    # for a in range(1, 17):
-    #     print("DI", a, "-", decode_bit(read_mem(a, "Q", sock), a), end=", ")
-    # print("\n")
-    #
-    # for a in range(1, 17):
-    #     print("DO", a, "-", decode_bit(read_mem(a, "I", sock), a), end=", ")
-    # print("\n")
-    #
-    # print("GO11 :", decode_register(read_mem(11, "AI", sock)))
-    #
-    # print("R1   :", decode_register(read_mem(1, "R", sock)))
+    for a in range(1, 17):
+        print("DI", a, "-", decode_bit(read_mem(a, "Q", sock), a), end=", ")
+    print("\n")
+
+    for a in range(1, 17):
+        print("DO", a, "-", decode_bit(read_mem(a, "I", sock), a), end=", ")
+    print("\n")
+
+    print("GO11 :", decode_register(read_mem(11, "AI", sock)))
+
+    print("R1   :", decode_register(read_mem(1, "R", sock)))
 
     # TODO Add String Registers
     # SETVAR $SNPX_ASG[2].$ADDRESS 2001
     # SETVAR $SNPX_ASG[2].$SIZE 3960
     # SETVAR $SNPX_ASG[2].$VAR_NAME "SR[1]"
-    # R2001-R2040: String register 1
-    # print("SR1  :", decode_string(read_mem(11001, "R", sock, 40)))
+    # R11001-R11040: String register 1
+    print("SR1  :", decode_string(read_mem(11001, "R", sock, 40)))
 
-    # print("", decode_packet(write_mem(11001, "R", "b", sock)))
-    print("", decode_packet(write_mem(1, "R", 1234, sock)))
+    write_mem(11001, "R", "Hello World.", sock)
+    print("Wrote \"Hello World.\" to SR1")
+
+    # Write range is from -32768 to 32767
+    # Even though 65535 is the highest number you can read.
+    # Probably wont read floats if SNPX_ASG[X].$MULTIPLY is 0
+    # Tested with $MULTIPLY set to 1 (Signed 16 bit)
+    write_mem(1, "R", 32767, sock)
+    print("Wrote \"32767\" to R1")
+
+    write_mem(20, "AI", 2222, sock)
+    print("Wrote \"2222\" to GO20")
 
     sock.close()
