@@ -39,10 +39,13 @@ def read_mem(addr, reg, s, size=1):
     return r
 
 
-# Only tested writing strings
+# Maybe seperate this into num regs and strings
 def write_mem(addr, reg, var, s):
     msg = srtp_message.BASE_MSG.copy()
-    if len(var) % 2:
+    if type(var) == int:
+        fill = False
+        var_length = int(len(format(int(var & 255), '02X') + format(int(var >> 8), '02X')) / 2) # Could be simplified
+    elif len(var) % 2:
         fill = True
         var_length = len(var)+1
     else:
@@ -61,8 +64,12 @@ def write_mem(addr, reg, var, s):
     msg[52] = int(addr - 1 & 255).to_bytes(1, byteorder='big')
     msg[53] = int(addr - 1 >> 8).to_bytes(1, byteorder='big')
     msg[54] = (int(var_length / 2)).to_bytes(1, byteorder='big')
-    for x in var:
-        msg.append(x.encode('utf8'))
+    if type(var) == str:
+        for x in var:
+            msg.append(x.encode('utf8'))
+    else:
+        msg.append(int(var & 255).to_bytes(1, byteorder='big'))
+        msg.append(int(var >> 8).to_bytes(1, byteorder='big'))
     if fill:
         msg.append(b'\x00')
 
@@ -121,6 +128,7 @@ if __name__ == '__main__':
     # R2001-R2040: String register 1
     # print("SR1  :", decode_string(read_mem(11001, "R", sock, 40)))
 
-    print("", decode_packet(write_mem(11001, "R", "b", sock)))
+    # print("", decode_packet(write_mem(11001, "R", "b", sock)))
+    print("", decode_packet(write_mem(1, "R", 1234, sock)))
 
     sock.close()

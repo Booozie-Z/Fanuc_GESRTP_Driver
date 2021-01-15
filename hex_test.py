@@ -1,7 +1,6 @@
 import binascii
 import struct
 
-
 addr = 1
 # print(bytes.fromhex(format(int(struct.unpack('H', bytearray(binascii.a2b_hex(format(address, '04X'))))[0]), '04X')))
 # print(bytes.fromhex(format(binascii.a2b_hex(format(address, '04X').encode('utf8'))[0], '02X')))
@@ -21,12 +20,13 @@ addr = 1
 # for s in "abcd":
 #     print((s.encode('utf8').hex()))
 
-var = "bbb"
-# for x in range(len(var)):
-#     print(56+x, var[x].encode('utf8').hex())
-
-if len(var) % 2:
-    x = (len(var)+1).to_bytes(1, byteorder='big')
+var = 1234
+# print(type(var))
+if type(var) == str:
+    print("String")
 else:
-    x = (len(var)).to_bytes(1, byteorder='big')
-print(x)
+    print(int(var & 255).to_bytes(1, byteorder='big'))
+    print(int(var >> 8).to_bytes(1, byteorder='big'))
+
+# print(format(var, '02X'))
+print(format(int(var & 255), '02X') + format(int(var >> 8), '02X'))
