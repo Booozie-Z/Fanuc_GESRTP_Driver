@@ -3,7 +3,15 @@ Python 3 communication driver for reading and writing data to Fanuc Robots with 
 
 This was created in hopes to emulate Kepware's GE FANUC driver
 
-
+Tag | Read | Write | Untested
+--- | ---- | ----- | --------
+DI | [x] | [x] | [ ]
+DO | [x] | [x] | [ ]
+NR | [x] | [x] | [ ]
+SR | [x] | [x] | [ ]
+GO | [x] | [x] | [ ]
+GI | [ ] | [ ] | [x]
+Anything Else | [ ] | [ ] | [x]
 
 ## Read / Write Example:
 ```
