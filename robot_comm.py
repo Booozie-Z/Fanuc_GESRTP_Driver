@@ -38,12 +38,15 @@ def read_mem(addr, reg, s, size=1):
     return r
 
 
-# Maybe seperate this into num regs and strings
+# Maybe seperate this into num regs, strings, I/O
 def write_mem(addr, reg, var, s):
     msg = srtp_message.BASE_MSG.copy()
     if type(var) == int:
         fill = False
-        var_length = int(len(format(int(var & 255), '02X') + format(int(var >> 8), '02X')) / 2) # Could be simplified
+        var_length = int(len(format(int(var & 255), '02X') + format(int(var >> 8), '02X')) / 2)  # Could be simplified
+    elif type(var) == bool:
+        fill = False
+        var_length = 1
     elif len(var) % 2:
         fill = True
         var_length = len(var)+1
@@ -69,12 +72,20 @@ def write_mem(addr, reg, var, s):
     else:
         msg.append(int(var & 255).to_bytes(1, byteorder='big'))
         msg.append(int(var >> 8).to_bytes(1, byteorder='big'))
+    if type(var) == bool:
+        msg[54] = b'\x01'
+        idx = ((addr - 1) % 8)
+        if var:
+            result = (idx * "0" + "1" + ((8 - idx) * "0"))[::-1]
+        else:
+            result = "0"
+        msg[56] = (int(result, 2).to_bytes(1, byteorder='big'))
+        msg.pop()
     if fill:
         msg.append(b'\x00')
 
     out_bytes = b''.join(msg)
     s.send(out_bytes)
-
     return s.recv(1024)
 
 
@@ -128,5 +139,16 @@ if __name__ == '__main__':
 
     write_mem(20, "AI", 2222, sock)
     print("Wrote \"%d\" to GO20" % decode_register(read_mem(20, "AI", sock)))
+
+    value = True
+    for x in range(188, 197):
+        write_mem(x, "DI", value, sock)
+        print("Wrote \"%s\" to DI%d" % (decode_bit(read_mem(x, "Q", sock), x), x), end=" - ")
+    print('\n')
+
+    for x in range(101, 110):
+        write_mem(x, "DO", value, sock)
+        print("Wrote \"%s\" to DO%d" % (decode_bit(read_mem(x, "I", sock), x), x), end=" - ")
+    print('\n')
 
     sock.close()
