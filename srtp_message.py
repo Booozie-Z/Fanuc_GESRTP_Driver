@@ -61,7 +61,7 @@ BASE_MSG = [
     b'\x00',  # 51 - Request Dependent Space (Ex. Write Value Part 2 for LONG:MSB)
     b'\x00',  # 52 - Reserved/Unknown   # Kepware Shows For Writing: LSB Address - 1
     b'\x00',  # 53 - Reserved/Unknown   # Kepware Shows For Writing: MSB Address - 1
-    b'\x00',  # 54 - Reserved/Unknown   # Writing Length of Value / 2
+    b'\x00',  # 54 - Reserved/Unknown   # Writing - Length of Value / 2
     b'\x00'  # 55 - Reserved/Unknown
 ]
 
