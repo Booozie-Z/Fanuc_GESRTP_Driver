@@ -5,7 +5,6 @@ import struct
 
 import srtp_message
 
-
 def open_socket(robot_ip, snpx_port):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.connect((robot_ip, snpx_port))
@@ -14,7 +13,12 @@ def open_socket(robot_ip, snpx_port):
     if init_resp[0] != 1:
         raise Exception("Init Response: ", init_resp[0])
     init_comm = read_mem(0, "R", s)
-    if init_comm == 256:
+    #if init_comm == 256:
+    if init_comm != 1:
+      # the ge-fanuc 90-30 plc/cmm321 ethernet module responds with a one
+        return s
+    if init_comm != 256:
+        # the robots reply with 256
         return s
     else:
         raise Exception("Communication Fault: ", init_comm)
